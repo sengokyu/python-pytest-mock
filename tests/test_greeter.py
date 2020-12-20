@@ -31,3 +31,18 @@ class TestGreeter:
         # When
         with pytest.raises(Exception):
             instance.greet('Jane')
+
+    def test_sidelambda(self, mocker):
+        """ sideeffectでlambdaに置き換えてみます """
+        # Given
+        def output(message):
+            print('This is a sideeffect.', message)
+
+        result = 'result'
+        mocker.patch.object(Creator, 'create', return_value=result)
+        outputter = mocker.Mock(Outputter)
+        outputter.output.side_effect = output
+        instance = Greeter('Hi', outputter)
+
+        # When
+        instance.greet('Jane')
